@@ -138,14 +138,22 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:31059f88259ce3b0493b924f1f7816a4a85980685fbfe9e9c1ddbd18312990c0"
+  digest = "1:bc5b97aed67c36c5cf36a64baaab914ce3b2083a07be5bb861e085a75d9e7ea3"
+  name = "github.com/osallou/goterra-community"
+  packages = ["tools/model"]
+  pruneopts = "UT"
+  revision = "e3bac4ce9929110858a65cae2be1862c8e75c468"
+
+[[projects]]
+  branch = "master"
+  digest = "1:52ca48ea0d725abdbe87e9a5c5482c4131337fa889a008e15eb7e93c05203ef6"
   name = "github.com/osallou/goterra-lib"
   packages = [
     "lib/config",
     "lib/model",
   ]
   pruneopts = "UT"
-  revision = "d9730d38c813d06aaca623cc1fc5c1846f7e9eb5"
+  revision = "63ed4917f9e490b0cc601ca7fc07ba5bd7962f32"
 
 [[projects]]
   digest = "1:b2ee62e09bec113cf086d2ce0769efcc7bf79481aba8373fd8f7884e94df3462"
@@ -419,14 +427,18 @@
   input-imports = [
     "github.com/gorilla/handlers",
     "github.com/gorilla/mux",
+    "github.com/osallou/goterra-community/tools/model",
     "github.com/osallou/goterra-lib/lib/config",
     "github.com/osallou/goterra-lib/lib/model",
     "github.com/rs/cors",
     "github.com/rs/zerolog",
     "github.com/rs/zerolog/log",
+    "go.mongodb.org/mongo-driver/bson",
+    "go.mongodb.org/mongo-driver/bson/primitive",
     "go.mongodb.org/mongo-driver/mongo",
     "go.mongodb.org/mongo-driver/mongo/options",
     "gopkg.in/src-d/go-git.v4",
+    "gopkg.in/yaml.v2",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

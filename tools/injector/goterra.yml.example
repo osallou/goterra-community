@@ -1,0 +1,23 @@
+redis:
+        host: "localhost"
+        port: 6379
+        prefix: "goterra"
+
+mongo:
+        url: "mongodb://localhost:27017"
+        db: "goterra"
+
+
+url: "http://localhost:8005"
+
+fernet:
+        - "0123456789"
+web:
+        listen: "0.0.0.0"
+        port: 8005
+
+deploy:
+        # path where terraform scripts are written
+        path: "/tmp"
+
+amqp: "amqp://guest:guest@localhost:5672/"
