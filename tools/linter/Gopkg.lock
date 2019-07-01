@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  branch = "master"
+  digest = "1:bc5b97aed67c36c5cf36a64baaab914ce3b2083a07be5bb861e085a75d9e7ea3"
+  name = "github.com/osallou/goterra-community"
+  packages = ["tools/model"]
+  pruneopts = "UT"
+  revision = "369bf2bb9e7efec44982a968915492f6fb3a4067"
+
+[[projects]]
   digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
@@ -12,6 +20,9 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  input-imports = ["gopkg.in/yaml.v2"]
+  input-imports = [
+    "github.com/osallou/goterra-community/tools/model",
+    "gopkg.in/yaml.v2",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
