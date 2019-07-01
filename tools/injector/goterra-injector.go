@@ -245,7 +245,6 @@ func injector() {
 				recipe.BaseImages = t.Recipe.Base
 				recipe.Tags = t.Recipe.Tags
 				recipe.Timestamp = time.Now().Unix()
-				recipe.ParentRecipe = ""
 				recipe.Inputs = t.Recipe.Inputs
 				recipe.Namespace = ns
 				recipe.Description = t.Recipe.Description
@@ -254,10 +253,24 @@ func injector() {
 				recipe.Remote = name
 				recipe.RemoteVersion = version
 				if scriptErr != nil {
-					log.Error().Msgf("Could not read recipe script %s", t.Recipe.Path)
+					log.Warn().Msgf("Could not read recipe script %s", t.Recipe.Path)
 					continue
 				}
 				recipe.Script = string(script)
+				recipe.ParentRecipe = ""
+				if t.Recipe.Parent != "" {
+					elts := strings.Split(t.Recipe.Parent, "/")
+					if len(elts) != 2 {
+						log.Error().Msgf("Invalid parent")
+						continue
+					}
+					parentInDB, parentErr := getRecipe(ns, elts[0], elts[1])
+					if parentErr != nil {
+						log.Error().Msgf("could not find parent in db for %s, skipping... may be an ordering issue", t.Recipe.Path)
+						continue
+					}
+					recipe.ParentRecipe = parentInDB.ID.Hex()
+				}
 				createRecipe(ns, recipe)
 			} else {
 				// Exists
@@ -266,7 +279,6 @@ func injector() {
 				recipe.BaseImages = t.Recipe.Base
 				recipe.Tags = t.Recipe.Tags
 				recipe.Timestamp = time.Now().Unix()
-				recipe.ParentRecipe = ""
 				recipe.Inputs = t.Recipe.Inputs
 				recipe.Namespace = ns
 				recipe.Description = t.Recipe.Description
@@ -277,6 +289,20 @@ func injector() {
 					continue
 				}
 				recipe.Script = string(script)
+				recipe.ParentRecipe = ""
+				if t.Recipe.Parent != "" {
+					elts := strings.Split(t.Recipe.Parent, "/")
+					if len(elts) != 2 {
+						log.Error().Msgf("Invalid parent")
+						continue
+					}
+					parentInDB, parentErr := getRecipe(ns, elts[0], elts[1])
+					if parentErr != nil {
+						log.Error().Msgf("could not find parent in db for %s, skipping... may be an ordering issue", t.Recipe.Path)
+						continue
+					}
+					recipe.ParentRecipe = parentInDB.ID.Hex()
+				}
 				updateRecipe(ns, recipe)
 			}
 
