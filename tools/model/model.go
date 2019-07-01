@@ -52,13 +52,13 @@ type RecipeDefinition struct {
 
 // Template defines the meta info for a template
 type Template struct {
-	Author      string              `yaml:"author"`
-	License     string              `yaml:"license"`
-	Name        string              `yaml:"name"`
-	Description string              `yaml:"description"`
-	Inputs      map[string]string   `yaml:"inputs"`
-	Tags        []string            `yaml:"tags"`
-	Files       map[string][]string `yaml:"files"`
+	Author      string            `yaml:"author"`
+	License     string            `yaml:"license"`
+	Name        string            `yaml:"name"`
+	Description string            `yaml:"description"`
+	Inputs      map[string]string `yaml:"inputs"`
+	Tags        []string          `yaml:"tags"`
+	Files       map[string]string `yaml:"files"`
 	Path        string
 }
 
@@ -84,13 +84,12 @@ func (r *Template) Check() error {
 	if r.Files == nil || len(r.Files) == 0 {
 		return fmt.Errorf("no files specified")
 	}
-	for cloud, files := range r.Files {
-		for _, f := range files {
-			filePath := fmt.Sprintf("%s/%s/%s", path.Dir(r.Path), cloud, f)
-			if _, err := os.Stat(filePath); err != nil {
-				return fmt.Errorf("File %s does not exists", f)
-			}
+	for cloud, file := range r.Files {
+		filePath := fmt.Sprintf("%s/%s/%s", path.Dir(r.Path), cloud, file)
+		if _, err := os.Stat(filePath); err != nil {
+			return fmt.Errorf("File %s does not exists", file)
 		}
+
 	}
 
 	return nil
