@@ -228,6 +228,11 @@ func injector() {
 				log.Error().Msgf("Failed to read %s", file)
 				continue
 			}
+			errCheck := t.Recipe.Check()
+			if errCheck != nil {
+				log.Error().Msgf("Recipe did not pass the check!  %s", t.Recipe.Path)
+				continue
+			}
 			elts := strings.Split(t.Recipe.Path, "/")
 			name := elts[len(elts)-3]
 			version := elts[len(elts)-2]
@@ -290,6 +295,12 @@ func injector() {
 				log.Error().Msgf("Failed to read %s", file)
 				continue
 			}
+			errCheck := t.Template.Check()
+			if errCheck != nil {
+				log.Error().Msgf("Template did not pass the check!  %s", t.Template.Path)
+				continue
+			}
+
 			elts := strings.Split(t.Template.Path, "/")
 			name := elts[len(elts)-3]
 			version := elts[len(elts)-2]
