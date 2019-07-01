@@ -1,0 +1,13 @@
+template:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  license: Apache-2.0
+  name: "k3s"
+  description: "Lightweight kubernetes cluster https://k3s.io/"
+  inputs:
+    slave_count: "number of slave"
+    key_pair: "keypair"
+    flavor_name: "name of flavor"
+  tags:
+    - "k3s"
+  files:
+    openstack: "app.tf"

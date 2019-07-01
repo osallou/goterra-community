@@ -1,0 +1,12 @@
+recipe:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  license: Apache-2.0
+  name: "disk_block_automount"
+  description: "mount all vd* disks to /mnt/disks/dataX, if only 1 disk is present, a symlink is available at /mnt/data"
+  inputs: null
+  base:
+    - "debian"
+  parent: null
+  tags:
+    - "storage"
+    - "disk"

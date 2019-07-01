@@ -1,0 +1,11 @@
+recipe:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  license: Apache-2.0
+  name: "hello_world"
+  description: "fake recipe for testing"
+  inputs: null
+  base:
+    - "debian"
+  parent: null
+  tags:
+    - "test"
