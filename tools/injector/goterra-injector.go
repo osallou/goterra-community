@@ -252,6 +252,7 @@ func injector() {
 				script, scriptErr := ioutil.ReadFile(fmt.Sprintf("%s/recipes/%s/%s/recipe.sh", gitDir, name, version))
 				recipe.Remote = name
 				recipe.RemoteVersion = version
+				recipe.Version = version
 				if scriptErr != nil {
 					log.Warn().Msgf("Could not read recipe script %s", t.Recipe.Path)
 					continue
@@ -283,6 +284,7 @@ func injector() {
 				recipe.Namespace = ns
 				recipe.Description = t.Recipe.Description
 				recipe.Public = true
+				recipe.Version = version
 				script, scriptErr := ioutil.ReadFile(fmt.Sprintf("%s/recipes/%s/%s/recipe.sh", gitDir, name, version))
 				if scriptErr != nil {
 					log.Error().Msgf("Could not read recipe script %s", t.Recipe.Path)
@@ -344,6 +346,7 @@ func injector() {
 				template.Public = true
 				template.Remote = name
 				template.RemoteVersion = version
+				template.Version = version
 				template.Data = make(map[string]string)
 				for cloud, file := range t.Template.Files {
 					scriptFile := fmt.Sprintf("%s/templates/%s/%s/%s/%s", gitDir, name, version, cloud, file)
@@ -365,8 +368,7 @@ func injector() {
 				template.Namespace = ns
 				template.Description = t.Template.Description
 				template.Public = true
-				template.Remote = name
-				template.RemoteVersion = version
+				template.Version = version
 				template.Data = make(map[string]string)
 				for cloud, file := range t.Template.Files {
 					scriptFile := fmt.Sprintf("%s/templates/%s/%s/%s/%s", gitDir, name, version, cloud, file)
