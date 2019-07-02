@@ -1,0 +1,12 @@
+recipe:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  license: Apache-2.0
+  name: "k3s_master"
+  description: "Kubernetes k3s cluster master"
+  inputs: null
+  base:
+    - "debian"
+  parent: null
+  tags:
+    - "master"
+    - "k3s"
