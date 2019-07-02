@@ -48,7 +48,7 @@ resource "goterra_application" "slave" {
 resource "openstack_compute_instance_v2" "k3smaster" {
   name = "k3smaster"
   image_id = var.image_id
-  flavor_name = var.flavor
+  flavor_name = var.flavor_name
   key_pair = var.key_pair
   security_groups = ["default"]
   network {
