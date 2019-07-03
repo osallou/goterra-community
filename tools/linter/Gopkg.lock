@@ -7,7 +7,7 @@
   name = "github.com/osallou/goterra-community"
   packages = ["tools/model"]
   pruneopts = "UT"
-  revision = "369bf2bb9e7efec44982a968915492f6fb3a4067"
+  revision = "4fe34ffc16c1829cba417f13adb61054d6149f01"
 
 [[projects]]
   digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"

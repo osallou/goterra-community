@@ -357,6 +357,10 @@ func injector() {
 					}
 					template.Data[cloud] = string(script)
 				}
+				if t.Template.Recipes == nil {
+					t.Template.Recipes = make([]string, 0)
+				}
+				template.VarRecipes = t.Template.Recipes
 				createTemplate(ns, template)
 			} else {
 				// Exists
@@ -379,6 +383,10 @@ func injector() {
 					}
 					template.Data[cloud] = string(script)
 				}
+				if t.Template.Recipes == nil {
+					t.Template.Recipes = make([]string, 0)
+				}
+				template.VarRecipes = t.Template.Recipes
 				updateTemplate(ns, template)
 			}
 

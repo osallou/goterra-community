@@ -1,0 +1,16 @@
+template:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  license: Apache-2.0
+  name: "cluster"
+  description: "master/slave architecture with extra storage on master"
+  inputs:
+    slave_count: "number of slave"
+    key_pair: "keypair"
+    flavor_name: "name of flavor"
+  recipes:
+    - "recipes_master"
+    - "recipes_slave"
+  tags:
+    - "cluster"
+  files:
+    openstack: "app.tf"
