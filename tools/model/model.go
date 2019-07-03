@@ -60,6 +60,7 @@ type Template struct {
 	Tags        []string          `yaml:"tags"`
 	Files       map[string]string `yaml:"files"`
 	Path        string
+	Recipes     []string `yaml:"recipes"`
 }
 
 // TemplateDefinition containers a template definition
