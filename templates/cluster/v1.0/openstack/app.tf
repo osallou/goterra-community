@@ -24,7 +24,7 @@ resource "goterra_deployment" "my-deploy" {
 resource "goterra_application" "master" {
   name = "master"
   recipes = var.recipes_master
-  recipe_tags = ["master", "storage"]
+  recipe_tags = []
   deployment = "${goterra_deployment.my-deploy.id}"
   deployment_token = "${goterra_deployment.my-deploy.token}"
   application = var.goterra_application
@@ -37,7 +37,7 @@ resource "goterra_application" "master" {
 resource "goterra_application" "slave" {
   name = "slave"
   recipes = var.recipes_slave
-  recipe_tags = ["slave"]
+  recipe_tags = []
   deployment = "${goterra_deployment.my-deploy.id}"
   deployment_token = "${goterra_deployment.my-deploy.token}"
   application = var.goterra_application
@@ -47,8 +47,8 @@ resource "goterra_application" "slave" {
 
 }
 
-resource "openstack_compute_instance_v2" "k3smaster" {
-  name = "k3smaster"
+resource "openstack_compute_instance_v2" "master" {
+  name = "master"
   image_id = var.image_id
   flavor_name = var.flavor_name
   key_pair = var.key_pair
@@ -77,28 +77,19 @@ resource "openstack_compute_instance_v2" "k3smaster" {
 }
 
 
-data "goterra_deployment" "k3stoken" {
-    timeout = 900
-    deployment = "${goterra_deployment.my-deploy.id}"
-    token = "${goterra_deployment.my-deploy.token}"
-    key = "k3stoken"
-
-    depends_on = ["openstack_compute_instance_v2.k3smaster"]
-}
-
 resource "goterra_push" "masterip" {
   address = "${goterra_deployment.my-deploy.address}"
   token = "${goterra_deployment.my-deploy.token}"
   deployment = "${goterra_deployment.my-deploy.id}"
   key = "masterip"
-  value = "${openstack_compute_instance_v2.k3smaster.network.0.fixed_ip_v4}"
+  value = "${openstack_compute_instance_v2.master.network.0.fixed_ip_v4}"
 
-  depends_on = ["openstack_compute_instance_v2.k3smaster"]
+  depends_on = ["openstack_compute_instance_v2.master"]
 }
 
-resource "openstack_compute_instance_v2" "k3sslave" {
+resource "openstack_compute_instance_v2" "slave" {
 
-  name = "k3sslave${count.index}"
+  name = "slave${count.index}"
   image_id = var.image_id
   flavor_name = var.flavor_name
   key_pair = var.key_pair
@@ -115,17 +106,12 @@ resource "openstack_compute_instance_v2" "k3sslave" {
   }
 }
 
-output "k3stoken" {
-  value = "${data.goterra_deployment.k3stoken.data}"
-  depends_on = ["data.goterra_deployment.k3stoken"]
-}
-
 output "masterip" {
-  value = "${openstack_compute_instance_v2.k3smaster.network.0.fixed_ip_v4}"
+  value = "${openstack_compute_instance_v2.master.network.0.fixed_ip_v4}"
 }
 
 output "slavesip" {
-  value = ["${openstack_compute_instance_v2.k3sslave.*.network.0.fixed_ip_v4}"]
+  value = ["${openstack_compute_instance_v2.slave.*.network.0.fixed_ip_v4}"]
 }
 
 output "deployment_id" {
