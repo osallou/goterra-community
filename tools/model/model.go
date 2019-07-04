@@ -6,6 +6,44 @@ import (
 	"path"
 )
 
+// Endpoint defined a cloud endpoint
+type Endpoint struct {
+	Author      string            `yaml:"author"`
+	Name        string            `yaml:"name"`
+	Description string            `yaml:"description"`
+	Kind        string            `yaml:"kind"`
+	Features    map[string]string `yaml:"features"`
+	Inputs      map[string]string `yaml:"inputs"`
+	Config      map[string]string `yaml:"config"`
+	Images      map[string]string `yaml:"images"`
+	Tags        []string          `yaml:"tags"`
+	Path        string
+}
+
+// Check validates a recipe
+func (r *Endpoint) Check() error {
+	if r.Name == "" {
+		return fmt.Errorf("Missing name")
+	}
+	if r.Kind == " " {
+		return fmt.Errorf("Missing kind")
+	}
+	if len(r.Config) == 0 {
+		return fmt.Errorf("Missing config info")
+	}
+	if len(r.Images) == 0 {
+		return fmt.Errorf("No image mapping defined")
+
+	}
+
+	return nil
+}
+
+// EndpointDefinition containers a recipe definition
+type EndpointDefinition struct {
+	Endpoint Endpoint `yaml:"endpoint"`
+}
+
 // Recipe defines the meta info for a recipe
 type Recipe struct {
 	Author      string            `yaml:"author"`
@@ -85,6 +123,7 @@ func (r *Template) Check() error {
 	if r.Files == nil || len(r.Files) == 0 {
 		return fmt.Errorf("no files specified")
 	}
+
 	for cloud, file := range r.Files {
 		filePath := fmt.Sprintf("%s/%s/%s", path.Dir(r.Path), cloud, file)
 		if _, err := os.Stat(filePath); err != nil {
