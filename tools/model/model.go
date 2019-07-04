@@ -35,15 +35,21 @@ type Application struct {
 }
 
 // Check validates a recipe
-func (r *Application) Check() error {
+func (r *Application) Check() ([]string, error) {
 	if r.Name == "" {
-		return fmt.Errorf("Missing name")
+		return nil, fmt.Errorf("Missing name")
 	}
 	if r.Template == " " {
-		return fmt.Errorf("Missing template")
+		return nil, fmt.Errorf("Missing template")
+	}
+	expectedRecipes := make([]string, 0)
+	if r.Recipes != nil {
+		for _, recipes := range r.Recipes {
+			expectedRecipes = append(expectedRecipes, recipes...)
+		}
 	}
 
-	return nil
+	return expectedRecipes, nil
 }
 
 // ApplicationDefinition containers a recipe definition
