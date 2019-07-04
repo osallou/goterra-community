@@ -532,6 +532,7 @@ func injector() {
 				endpoint.Timestamp = time.Now().Unix()
 				endpoint.Namespace = ns
 				endpoint.Public = true
+				endpoint.Kind = t.Endpoint.Kind
 
 				endpoint.Features = t.Endpoint.Features
 				if endpoint.Features == nil {
@@ -561,7 +562,7 @@ func injector() {
 				endpoint.Timestamp = time.Now().Unix()
 				endpoint.Namespace = ns
 				endpoint.Public = true
-
+				endpoint.Kind = t.Endpoint.Kind
 				endpoint.Features = t.Endpoint.Features
 				if endpoint.Features == nil {
 					endpoint.Features = make(map[string]string)
