@@ -1,0 +1,14 @@
+application:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  name: "k3s-cluster"
+  description: "k3s kubernetes cluster"
+  template: "cluster/v1.0"
+  recipes:
+    recipes_master:
+      - "disk_block_automount/v1.0"
+      - "k3s-master/v1.0"
+    recipes_slave:
+      - "k3s-slave/v1.0"
+  tags:
+    - "k3s"
+    - "cluster"
