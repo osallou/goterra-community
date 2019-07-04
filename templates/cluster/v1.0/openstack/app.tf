@@ -68,7 +68,7 @@ resource "openstack_compute_instance_v2" "master" {
   block_device {
     source_type           = "blank"
     destination_type      = "volume"
-    volume_size           = 1
+    volume_size           = var.master_volume_size
     boot_index            = 1
     delete_on_termination = true
   }

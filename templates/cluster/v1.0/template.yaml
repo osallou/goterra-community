@@ -7,6 +7,7 @@ template:
     slave_count: "number of slave"
     key_pair: "keypair"
     flavor_name: "name of flavor"
+    master_volume_size: "volume size of master"
   recipes:
     - "recipes_master"
     - "recipes_slave"
