@@ -4,24 +4,9 @@ import (
 	"fmt"
 	"os"
 	"path"
-)
 
-/*
-application:
-  author: Olivier Sallou <olivier.sallou@irisa.fr>
-  name: "k3s-cluster"
-  description: "k3s kubernetes cluster"
-  template: "cluster/v1.0"
-  recipes:
-    recipes_master:
-      - "disk_block_automount/v1.0"
-      - "k3s-master/v1.0"
-    recipes_slave:
-      - "k3s-slave/v1.0"
-  tags:
-    - "k3s"
-    - "cluster"
-*/
+	terraModel "github.com/osallou/goterra-lib/lib/model"
+)
 
 // Application defined a cloud endpoint
 type Application struct {
@@ -32,6 +17,89 @@ type Application struct {
 	Recipes     map[string][]string `yaml:"recipes"`
 	Tags        []string            `yaml:"tags"`
 	Path        string
+}
+
+// checkRecipeImage checks (sub)recipe exists, returns base image of recipe
+func checkRecipeImage(recdb terraModel.Recipe, recipes map[string]terraModel.Recipe) ([]string, error) {
+	if recdb.ParentRecipe != "" {
+		parentFound := false
+		var parentRecipe terraModel.Recipe
+		if recipe, ok := recipes[recdb.ParentRecipe]; ok {
+			parentRecipe = recipe
+			parentFound = true
+		}
+		if !parentFound {
+			return nil, fmt.Errorf("parent recipe not found %s", recdb.ParentRecipe)
+		}
+		parentImage, err := checkRecipeImage(parentRecipe, recipes)
+		if err != nil {
+			return nil, err
+		}
+		return parentImage, nil
+	}
+	if recdb.BaseImages == nil || len(recdb.BaseImages) == 0 {
+		return nil, fmt.Errorf("recipe has no base image nor parent recipe")
+	}
+	return recdb.BaseImages, nil
+
+}
+
+func removeDuplicates(elements []string) []string {
+	encountered := map[string]bool{}
+	result := []string{}
+
+	for v := range elements {
+		if encountered[elements[v]] == true {
+			// Do not add duplicate.
+		} else {
+			// Record this element as an encountered element.
+			encountered[elements[v]] = true
+			// Append to result slice.
+			result = append(result, elements[v])
+		}
+	}
+	// Return the new slice.
+	return result
+}
+
+func (r *Application) GetAppBaseImages(appRecipes []terraModel.Recipe, recipes map[string]terraModel.Recipe) ([]string, error) {
+	possibleBaseImagesNew := true
+	possibleBaseImagesSet := make(map[string]bool, 0)
+	possibleBaseImages := make([]string, 0)
+
+	for _, recInfo := range appRecipes {
+		parentBaseImages, parentErr := checkRecipeImage(recInfo, recipes)
+		if parentErr != nil {
+			return nil, parentErr
+		}
+
+		gotACommonBaseImage := false
+		// populating for first recipe
+		if possibleBaseImagesNew {
+			gotACommonBaseImage = true
+			possibleBaseImagesNew = false
+			possibleBaseImages = append(possibleBaseImages, parentBaseImages...)
+			for _, availableImage := range parentBaseImages {
+				possibleBaseImagesSet[availableImage] = true
+			}
+		} else {
+			possibleBaseImagesNew = false
+			for _, availableImage := range parentBaseImages {
+				if _, ok := possibleBaseImagesSet[availableImage]; ok {
+					possibleBaseImages = append(possibleBaseImages, availableImage)
+					gotACommonBaseImage = true
+				}
+			}
+		}
+
+		if !gotACommonBaseImage {
+			// No common base image in recipes
+			return nil, fmt.Errorf("No common base image in recipes")
+		}
+
+	}
+
+	return removeDuplicates(possibleBaseImages), nil
 }
 
 // Check validates a recipe
