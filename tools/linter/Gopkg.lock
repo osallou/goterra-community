@@ -3,11 +3,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:f30f447f1e8fbc726a48e96a5e2d21df22b03749cd82086ecafbf2eb1c71f43c"
+  digest = "1:f2ca4e0a159ef1782efd18c92f356b8a20c31c458490368f64eab2d6254a1400"
   name = "github.com/osallou/goterra-community"
   packages = ["tools/model"]
   pruneopts = "UT"
-  revision = "aa43a8dee282db2f5e28e13ef0ff40587a521d6a"
+  revision = "df6dc022b02771fd23230b93787ba0f8c45fbd92"
 
 [[projects]]
   digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"

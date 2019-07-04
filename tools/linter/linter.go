@@ -106,6 +106,38 @@ func main() {
 		fmt.Printf("Check:endpoint:%s:ok\n", t.Endpoint.Name)
 	}
 
+	files, err = findFiles(targetDirectory, "app.yaml")
+	if err != nil {
+		fmt.Printf("Error: %s", err)
+		os.Exit(1)
+	}
+
+	for _, f := range files {
+		fmt.Printf("found %s\n", f)
+		yamlApp, _ := ioutil.ReadFile(f)
+		t := terraGitModel.ApplicationDefinition{}
+		t.Application.Path = f
+		err := yaml.Unmarshal(yamlApp, &t)
+		if err != nil {
+			fmt.Printf("Chec:application:%s:error: %s", t.Application.Path, err)
+			hasError = true
+		}
+		expectedRecipes, errCheck := t.Application.Check()
+		if errCheck != nil {
+			fmt.Printf("Check:application:%s:error: %s\n", t.Application.Name, errCheck)
+			hasError = true
+		}
+		for _, expectedRecipe := range expectedRecipes {
+			recipeFile := fmt.Sprintf("%s/recipes/%s/recipe.yaml", targetDirectory, expectedRecipe)
+			fmt.Printf("Check:application:%s:check:needs:%s\n", t.Application.Name, recipeFile)
+			if _, ok := os.Stat(recipeFile); ok != nil {
+				fmt.Printf("Check:application:%s:needs:%s:error:notfound\n", t.Application.Name, recipeFile)
+				hasError = true
+			}
+		}
+		fmt.Printf("Check:application:%s:ok\n", t.Application.Name)
+	}
+
 	if hasError {
 		os.Exit(1)
 	}
