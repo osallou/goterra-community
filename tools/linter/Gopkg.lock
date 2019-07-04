@@ -3,11 +3,27 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:f2ca4e0a159ef1782efd18c92f356b8a20c31c458490368f64eab2d6254a1400"
+  digest = "1:bb46089914151e0fee13cddd0bcf1bf2d85ad5f4157558a547df1675b33a94a4"
   name = "github.com/osallou/goterra-community"
   packages = ["tools/model"]
   pruneopts = "UT"
-  revision = "df6dc022b02771fd23230b93787ba0f8c45fbd92"
+  revision = "51ba8b83a13eed6e66304e359f6f55d6d536d0e3"
+
+[[projects]]
+  branch = "master"
+  digest = "1:cd1c4b44318b4a95801c08078e0af34a2237050c390cfea406eddde9ed8ccb59"
+  name = "github.com/osallou/goterra-lib"
+  packages = ["lib/model"]
+  pruneopts = "UT"
+  revision = "cedb0af70711480ec01861c250f6db542b2e2851"
+
+[[projects]]
+  digest = "1:1cabe44fb226a08664539c7ff79f25940284d9e2116187a74c90472a51c257ca"
+  name = "go.mongodb.org/mongo-driver"
+  packages = ["bson/primitive"]
+  pruneopts = "UT"
+  revision = "582ff343271e8893d785ff094855498c285bce0a"
+  version = "v1.0.3"
 
 [[projects]]
   digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
@@ -22,6 +38,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/osallou/goterra-community/tools/model",
+    "github.com/osallou/goterra-lib/lib/model",
     "gopkg.in/yaml.v2",
   ]
   solver-name = "gps-cdcl"

@@ -5,10 +5,12 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	yaml "gopkg.in/yaml.v2"
 
 	terraGitModel "github.com/osallou/goterra-community/tools/model"
+	terraModel "github.com/osallou/goterra-lib/lib/model"
 )
 
 func findFiles(targetDir string, pattern string) (files []string, err error) {
@@ -40,6 +42,8 @@ func main() {
 
 	hasError := false
 
+	foundRecipes := make(map[string]terraModel.Recipe)
+
 	for _, f := range files {
 		fmt.Printf("found %s\n", f)
 		yamlRecipe, _ := ioutil.ReadFile(f)
@@ -56,6 +60,19 @@ func main() {
 			hasError = true
 		}
 		fmt.Printf("Check:recipe:%s:ok\n", t.Recipe.Name)
+
+		t.Recipe.Path = f
+		elts := strings.Split(t.Recipe.Path, "/")
+		name := elts[len(elts)-3]
+		version := elts[len(elts)-2]
+		recipe := terraModel.Recipe{
+			Remote:        name,
+			RemoteVersion: version,
+			BaseImages:    t.Recipe.Base,
+			ParentRecipe:  t.Recipe.Parent,
+		}
+		foundRecipes[fmt.Sprintf("%s/%s", name, version)] = recipe
+
 	}
 
 	files, err = findFiles(targetDirectory, "template.yaml")
@@ -127,6 +144,7 @@ func main() {
 			fmt.Printf("Check:application:%s:error: %s\n", t.Application.Name, errCheck)
 			hasError = true
 		}
+		appRecipes := make([]terraModel.Recipe, 0)
 		for _, expectedRecipe := range expectedRecipes {
 			recipeFile := fmt.Sprintf("%s/recipes/%s/recipe.yaml", targetDirectory, expectedRecipe)
 			fmt.Printf("Check:application:%s:check:needs:%s\n", t.Application.Name, recipeFile)
@@ -134,6 +152,13 @@ func main() {
 				fmt.Printf("Check:application:%s:needs:%s:error:notfound\n", t.Application.Name, recipeFile)
 				hasError = true
 			}
+			appRecipes = append(appRecipes, foundRecipes[expectedRecipe])
+		}
+
+		_, baseErr := t.Application.GetAppBaseImages(appRecipes, foundRecipes)
+		if baseErr != nil {
+			fmt.Printf("Check:application:%s:base_image:no base image found\n", t.Application.Name)
+			hasError = true
 		}
 		fmt.Printf("Check:application:%s:ok\n", t.Application.Name)
 	}

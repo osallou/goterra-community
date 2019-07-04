@@ -38,6 +38,7 @@ var nsCollection *mongo.Collection
 var recipeCollection *mongo.Collection
 var templateCollection *mongo.Collection
 var endpointCollection *mongo.Collection
+var appCollection *mongo.Collection
 
 func pull(workTree *git.Worktree) error {
 	pullOptions := git.PullOptions{}
@@ -218,6 +219,48 @@ func createEndpoint(ns string, endpoint *terraModel.EndPoint) (string, error) {
 	return newEndpoint.InsertedID.(primitive.ObjectID).Hex(), nil
 }
 
+func getApplication(ns string, name string, version string) (*terraModel.Application, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	var application terraModel.Application
+	req := bson.M{
+		"namespace":     ns,
+		"remote":        name,
+		"remoteversion": version,
+	}
+	log.Info().Msgf("Search application %s in ns %s", name, ns)
+	err := appCollection.FindOne(ctx, req).Decode(&application)
+	if err != nil {
+		log.Info().Msgf("error => %s", err)
+		return nil, err
+	}
+	return &application, nil
+}
+
+func updateApplication(ns string, application *terraModel.Application) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	req := bson.M{
+		"_id": application.ID,
+	}
+	_, err := appCollection.ReplaceOne(ctx, req, application)
+	if err != nil {
+		log.Error().Msgf("Failed to update application %s", err)
+	}
+}
+
+func createApplication(ns string, application *terraModel.Application) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	newApplication, err := appCollection.InsertOne(ctx, application)
+	if err != nil {
+		log.Error().Msgf("Failed to create application %+v", application)
+		return "", err
+	}
+	return newApplication.InsertedID.(primitive.ObjectID).Hex(), nil
+}
+
 func injector() {
 	config := terraConfig.LoadConfig()
 	gitDir := "/tmp/goterra-git"
@@ -253,6 +296,7 @@ func injector() {
 		log.Info().Msg("Try to inject new/updated recipes")
 
 		createdRecipes := make(map[string]string)
+		foundRecipes := make(map[string]terraModel.Recipe)
 		createdTemplates := make(map[string]string)
 
 		if os.Getenv("GOT_PULL_SKIP") != "1" {
@@ -361,6 +405,13 @@ func injector() {
 				updateRecipe(ns, recipe)
 				createdRecipes[name+"/"+version] = recipe.ID.Hex()
 			}
+			tmpRecipe := terraModel.Recipe{
+				Remote:        name,
+				RemoteVersion: version,
+				BaseImages:    t.Recipe.Base,
+				ParentRecipe:  t.Recipe.Parent,
+			}
+			foundRecipes[fmt.Sprintf("%s/%s", name, version)] = tmpRecipe
 
 		}
 
@@ -534,6 +585,111 @@ func injector() {
 
 		}
 
+		files, err = findFiles(gitDir+"/apps", "app.yaml")
+		if err != nil {
+			log.Error().Msgf("failed to search apps: %s", err)
+		}
+		for _, file := range files {
+			yamlApp, _ := ioutil.ReadFile(file)
+			t := terraGitModel.ApplicationDefinition{}
+			t.Application.Path = file
+			err := yaml.Unmarshal(yamlApp, &t)
+			if err != nil {
+				log.Error().Msgf("Failed to read %s", file)
+				continue
+			}
+
+			expectedRecipes, errCheck := t.Application.Check()
+			if errCheck != nil {
+				log.Error().Msgf("Application did not pass the check!  %s", t.Application.Path)
+				continue
+			}
+			appRecipes := make([]terraModel.Recipe, 0)
+			for _, expectedRecipe := range expectedRecipes {
+				appRecipes = append(appRecipes, foundRecipes[expectedRecipe])
+			}
+
+			baseImages, baseErr := t.Application.GetAppBaseImages(appRecipes, foundRecipes)
+			if baseErr != nil {
+				log.Error().Msgf("Application %s could not find a base image between recipes", t.Application.Path)
+				continue
+			}
+			log.Error().Msgf("Base images: %+v", baseImages)
+
+			elts := strings.Split(t.Application.Path, "/")
+			name := elts[len(elts)-3]
+			version := elts[len(elts)-2]
+			application, rerr := getApplication(ns, name, version)
+			if rerr != nil {
+				// Does not exists
+				log.Debug().Msgf("Application does not exists %s", name)
+				application = &terraModel.Application{}
+				application.Image = baseImages
+				application.Name = t.Application.Name
+				application.Description = t.Application.Description
+				application.Remote = name
+				application.RemoteVersion = version
+				application.Timestamp = time.Now().Unix()
+				application.Namespace = ns
+				application.Public = true
+				application.TemplateRecipes = make(map[string][]string)
+				hasError := false
+				for tplVar, recipes := range t.Application.Recipes {
+					for _, recipe := range recipes {
+						if recipeID, ok := createdRecipes[recipe]; ok {
+							if application.TemplateRecipes[tplVar] == nil {
+								application.TemplateRecipes[tplVar] = make([]string, 0)
+							}
+							application.TemplateRecipes[tplVar] = append(application.TemplateRecipes[tplVar], recipeID)
+						} else {
+							log.Error().Msgf("App %s requests recipe %s, but it does not exists!", t.Application.Name, recipe)
+							hasError = true
+							break
+						}
+
+					}
+				}
+				if hasError {
+					continue
+				}
+
+				createApplication(ns, application)
+			} else {
+				// Exists
+				log.Debug().Msgf("Application exists %s", name)
+				application.Name = t.Application.Name
+				application.Image = baseImages
+				application.Description = t.Application.Description
+				application.Remote = name
+				application.RemoteVersion = version
+				application.Timestamp = time.Now().Unix()
+				application.Namespace = ns
+				application.Public = true
+				application.TemplateRecipes = make(map[string][]string)
+				hasError := false
+				for tplVar, recipes := range t.Application.Recipes {
+					for _, recipe := range recipes {
+						if recipeID, ok := createdRecipes[recipe]; ok {
+							if application.TemplateRecipes[tplVar] == nil {
+								application.TemplateRecipes[tplVar] = make([]string, 0)
+							}
+							application.TemplateRecipes[tplVar] = append(application.TemplateRecipes[tplVar], recipeID)
+						} else {
+							log.Error().Msgf("App %s requests recipe %s, but it does not exists!  %s", t.Application.Name, recipe)
+							hasError = true
+							break
+						}
+
+					}
+				}
+				if hasError {
+					continue
+				}
+				updateApplication(ns, application)
+			}
+
+		}
+
 		// Sleep for one hour
 		time.Sleep(1 * time.Hour)
 	}
@@ -582,6 +738,7 @@ func main() {
 	recipeCollection = mongoClient.Database(config.Mongo.DB).Collection("recipe")
 	templateCollection = mongoClient.Database(config.Mongo.DB).Collection("template")
 	endpointCollection = mongoClient.Database(config.Mongo.DB).Collection("endpoint")
+	appCollection = mongoClient.Database(config.Mongo.DB).Collection("application")
 
 	go injector()
 
