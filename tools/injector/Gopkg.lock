@@ -138,22 +138,22 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:94da0215300191f8d7c9d5f68070613d73815fbc51ef4942b2f08fb3d92f6a47"
+  digest = "1:f30f447f1e8fbc726a48e96a5e2d21df22b03749cd82086ecafbf2eb1c71f43c"
   name = "github.com/osallou/goterra-community"
   packages = ["tools/model"]
   pruneopts = "UT"
-  revision = "061586e9e66f8d2a6c5369783a4f1d8f1a968f20"
+  revision = "aa43a8dee282db2f5e28e13ef0ff40587a521d6a"
 
 [[projects]]
   branch = "master"
-  digest = "1:8fd8f68ebae3f80041790a3d3e3f7e23ef92ee380dbba0646118e8e2e8cd3769"
+  digest = "1:2d577168c6b5adea4cd55b49cb0fd71e884a016e2cb5877e835c4c3044f83e0a"
   name = "github.com/osallou/goterra-lib"
   packages = [
     "lib/config",
     "lib/model",
   ]
   pruneopts = "UT"
-  revision = "eed02b1431b850a07f8c7cbd730fc9bfb4ca882e"
+  revision = "d2e172268c51fb6dc41e8efa4080a3d566acb4e7"
 
 [[projects]]
   digest = "1:b2ee62e09bec113cf086d2ce0769efcc7bf79481aba8373fd8f7884e94df3462"

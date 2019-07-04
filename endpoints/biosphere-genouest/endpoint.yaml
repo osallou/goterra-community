@@ -1,0 +1,25 @@
+endpoint:
+  kind: "openstack"
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  name: "biosphere-genouest"
+  description: "GenOuest openstack cloud config for biosphere"
+  inputs: null
+  features:
+    disk_ephemeral: "1"
+    disk_shared: "1"
+    ip_public: "0"
+  images:
+    "debian": "1c1c30f4-c787-4953-ba86-a24d5a1aee21"
+  config:
+    auth_url: "https://genostack-api-keystone.genouest.org/v3"
+    domain_id: "851b4b29ba404f2f8c48fd9a54b2ed8a"
+    network: "provider"
+    user_domain_id: "851b4b29ba404f2f8c48fd9a54b2ed8a"
+    project_domain_id: "851b4b29ba404f2f8c48fd9a54b2ed8a"
+    tenant_id: "110a108343fe47eca859bd582f76c52d"
+    tenant_name: "biosphere"
+    public_ip_pool: ""
+  tags:
+    - "biosphere"
+    - "genouest"
+    - "openstack"

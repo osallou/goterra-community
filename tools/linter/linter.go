@@ -82,6 +82,30 @@ func main() {
 		fmt.Printf("Check:template:%s:ok\n", t.Template.Name)
 	}
 
+	files, err = findFiles(targetDirectory, "endpoint.yaml")
+	if err != nil {
+		fmt.Printf("Error: %s", err)
+		os.Exit(1)
+	}
+
+	for _, f := range files {
+		fmt.Printf("found %s\n", f)
+		yamlTemplate, _ := ioutil.ReadFile(f)
+		t := terraGitModel.EndpointDefinition{}
+		t.Endpoint.Path = f
+		err := yaml.Unmarshal(yamlTemplate, &t)
+		if err != nil {
+			fmt.Printf("Chec:endpoint:%s:error: %s", t.Endpoint.Path, err)
+			hasError = true
+		}
+		errCheck := t.Endpoint.Check()
+		if errCheck != nil {
+			fmt.Printf("Check:endpoint:%s:error: %s\n", t.Endpoint.Name, errCheck)
+			hasError = true
+		}
+		fmt.Printf("Check:endpoint:%s:ok\n", t.Endpoint.Name)
+	}
+
 	if hasError {
 		os.Exit(1)
 	}

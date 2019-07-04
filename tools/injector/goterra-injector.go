@@ -37,6 +37,7 @@ var mongoClient mongo.Client
 var nsCollection *mongo.Collection
 var recipeCollection *mongo.Collection
 var templateCollection *mongo.Collection
+var endpointCollection *mongo.Collection
 
 func pull(workTree *git.Worktree) error {
 	pullOptions := git.PullOptions{}
@@ -111,6 +112,29 @@ func getRecipe(ns string, name string, version string) (*terraModel.Recipe, erro
 	return &recipe, nil
 }
 
+func updateRecipe(ns string, recipe *terraModel.Recipe) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	req := bson.M{
+		"_id": recipe.ID,
+	}
+	_, err := recipeCollection.ReplaceOne(ctx, req, recipe)
+	if err != nil {
+		log.Error().Msgf("Failed to update recipe %s", err)
+	}
+}
+
+func createRecipe(ns string, recipe *terraModel.Recipe) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	newRecipe, err := recipeCollection.InsertOne(ctx, recipe)
+	if err != nil {
+		log.Error().Msgf("Failed to create recipe %+v", recipe)
+		return "", err
+	}
+	return newRecipe.InsertedID.(primitive.ObjectID).Hex(), nil
+}
+
 func getTemplate(ns string, name string, version string) (*terraModel.Template, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -130,27 +154,6 @@ func getTemplate(ns string, name string, version string) (*terraModel.Template, 
 	return &template, nil
 }
 
-func updateRecipe(ns string, recipe *terraModel.Recipe) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-	req := bson.M{
-		"_id": recipe.ID,
-	}
-	_, err := recipeCollection.ReplaceOne(ctx, req, recipe)
-	if err != nil {
-		log.Error().Msgf("Failed to update recipe %s", err)
-	}
-}
-
-func createRecipe(ns string, recipe *terraModel.Recipe) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-	_, err := recipeCollection.InsertOne(ctx, recipe)
-	if err != nil {
-		log.Error().Msgf("Failed to create recipe %+v", recipe)
-	}
-}
-
 func updateTemplate(ns string, template *terraModel.Template) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -163,13 +166,56 @@ func updateTemplate(ns string, template *terraModel.Template) {
 	}
 }
 
-func createTemplate(ns string, template *terraModel.Template) {
+func createTemplate(ns string, template *terraModel.Template) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	_, err := templateCollection.InsertOne(ctx, template)
+	newTemplate, err := templateCollection.InsertOne(ctx, template)
 	if err != nil {
 		log.Error().Msgf("Failed to create template %+v", template)
+		return "", err
 	}
+	return newTemplate.InsertedID.(primitive.ObjectID).Hex(), nil
+}
+
+func getEndpoint(ns string, name string) (*terraModel.EndPoint, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	var endpoint terraModel.EndPoint
+	req := bson.M{
+		"namespace": ns,
+		"remote":    name,
+	}
+	log.Info().Msgf("Search endpoint %s in ns %s", name, ns)
+	err := endpointCollection.FindOne(ctx, req).Decode(&endpoint)
+	if err != nil {
+		log.Info().Msgf("error => %s", err)
+		return nil, err
+	}
+	return &endpoint, nil
+}
+
+func updateEndpoint(ns string, endpoint *terraModel.EndPoint) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	req := bson.M{
+		"_id": endpoint.ID,
+	}
+	_, err := endpointCollection.ReplaceOne(ctx, req, endpoint)
+	if err != nil {
+		log.Error().Msgf("Failed to update endpoint %s", err)
+	}
+}
+
+func createEndpoint(ns string, endpoint *terraModel.EndPoint) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	newEndpoint, err := templateCollection.InsertOne(ctx, endpoint)
+	if err != nil {
+		log.Error().Msgf("Failed to create endpoint %+v", endpoint)
+		return "", err
+	}
+	return newEndpoint.InsertedID.(primitive.ObjectID).Hex(), nil
 }
 
 func injector() {
@@ -205,6 +251,10 @@ func injector() {
 
 	for true {
 		log.Info().Msg("Try to inject new/updated recipes")
+
+		createdRecipes := make(map[string]string)
+		createdTemplates := make(map[string]string)
+
 		if os.Getenv("GOT_PULL_SKIP") != "1" {
 			pullErr := pull(workTree)
 			if pullErr != nil {
@@ -272,7 +322,10 @@ func injector() {
 					}
 					recipe.ParentRecipe = parentInDB.ID.Hex()
 				}
-				createRecipe(ns, recipe)
+				id, newErr := createRecipe(ns, recipe)
+				if newErr == nil {
+					createdRecipes[name+"/"+version] = id
+				}
 			} else {
 				// Exists
 				log.Debug().Msgf("Recipe exists %s:%s", name, version)
@@ -306,6 +359,7 @@ func injector() {
 					recipe.ParentRecipe = parentInDB.ID.Hex()
 				}
 				updateRecipe(ns, recipe)
+				createdRecipes[name+"/"+version] = recipe.ID.Hex()
 			}
 
 		}
@@ -361,7 +415,10 @@ func injector() {
 					t.Template.Recipes = make([]string, 0)
 				}
 				template.VarRecipes = t.Template.Recipes
-				createTemplate(ns, template)
+				id, newErr := createTemplate(ns, template)
+				if newErr == nil {
+					createdRecipes[name+"/"+version] = id
+				}
 			} else {
 				// Exists
 				log.Debug().Msgf("Template exists %s:%s", name, version)
@@ -388,6 +445,91 @@ func injector() {
 				}
 				template.VarRecipes = t.Template.Recipes
 				updateTemplate(ns, template)
+				createdTemplates[name+"/"+version] = template.ID.Hex()
+			}
+
+		}
+
+		files, err = findFiles(gitDir+"/endpoints", "endpoint.yaml")
+		if err != nil {
+			log.Error().Msgf("failed to search endpoints: %s", err)
+		}
+		for _, file := range files {
+			yamlEndpoint, _ := ioutil.ReadFile(file)
+			t := terraGitModel.EndpointDefinition{}
+			t.Endpoint.Path = file
+			err := yaml.Unmarshal(yamlEndpoint, &t)
+			if err != nil {
+				log.Error().Msgf("Failed to read %s", file)
+				continue
+			}
+			errCheck := t.Endpoint.Check()
+			if errCheck != nil {
+				log.Error().Msgf("Endpoint did not pass the check!  %s", t.Endpoint.Path)
+				continue
+			}
+
+			elts := strings.Split(t.Endpoint.Path, "/")
+			name := elts[len(elts)-2]
+			endpoint, rerr := getEndpoint(ns, name)
+			if rerr != nil {
+				// Does not exists
+				log.Debug().Msgf("Endpoint does not exists %s", name)
+				endpoint = &terraModel.EndPoint{}
+				endpoint.Name = t.Endpoint.Name
+				endpoint.Remote = name
+				endpoint.Timestamp = time.Now().Unix()
+				endpoint.Namespace = ns
+				endpoint.Public = true
+
+				endpoint.Features = t.Endpoint.Features
+				if endpoint.Features == nil {
+					endpoint.Features = make(map[string]string)
+				}
+				endpoint.Inputs = t.Endpoint.Inputs
+				if endpoint.Inputs == nil {
+					endpoint.Inputs = make(map[string]string)
+				}
+
+				endpoint.Config = t.Endpoint.Config
+				if endpoint.Config == nil {
+					endpoint.Config = make(map[string]string)
+				}
+
+				endpoint.Images = t.Endpoint.Images
+				if endpoint.Images == nil {
+					endpoint.Images = make(map[string]string)
+				}
+
+				createEndpoint(ns, endpoint)
+			} else {
+				// Exists
+				log.Debug().Msgf("Endpoint exists %s", name)
+				endpoint.Name = t.Endpoint.Name
+				endpoint.Remote = name
+				endpoint.Timestamp = time.Now().Unix()
+				endpoint.Namespace = ns
+				endpoint.Public = true
+
+				endpoint.Features = t.Endpoint.Features
+				if endpoint.Features == nil {
+					endpoint.Features = make(map[string]string)
+				}
+				endpoint.Inputs = t.Endpoint.Inputs
+				if endpoint.Inputs == nil {
+					endpoint.Inputs = make(map[string]string)
+				}
+
+				endpoint.Config = t.Endpoint.Config
+				if endpoint.Config == nil {
+					endpoint.Config = make(map[string]string)
+				}
+
+				endpoint.Images = t.Endpoint.Images
+				if endpoint.Images == nil {
+					endpoint.Images = make(map[string]string)
+				}
+				updateEndpoint(ns, endpoint)
 			}
 
 		}
@@ -439,6 +581,7 @@ func main() {
 	nsCollection = mongoClient.Database(config.Mongo.DB).Collection("ns")
 	recipeCollection = mongoClient.Database(config.Mongo.DB).Collection("recipe")
 	templateCollection = mongoClient.Database(config.Mongo.DB).Collection("template")
+	endpointCollection = mongoClient.Database(config.Mongo.DB).Collection("endpoint")
 
 	go injector()
 
