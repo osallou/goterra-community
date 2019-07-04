@@ -210,7 +210,7 @@ func updateEndpoint(ns string, endpoint *terraModel.EndPoint) {
 func createEndpoint(ns string, endpoint *terraModel.EndPoint) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	newEndpoint, err := templateCollection.InsertOne(ctx, endpoint)
+	newEndpoint, err := endpointCollection.InsertOne(ctx, endpoint)
 	if err != nil {
 		log.Error().Msgf("Failed to create endpoint %+v", endpoint)
 		return "", err
