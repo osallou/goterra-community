@@ -6,6 +6,51 @@ import (
 	"path"
 )
 
+/*
+application:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  name: "k3s-cluster"
+  description: "k3s kubernetes cluster"
+  template: "cluster/v1.0"
+  recipes:
+    recipes_master:
+      - "disk_block_automount/v1.0"
+      - "k3s-master/v1.0"
+    recipes_slave:
+      - "k3s-slave/v1.0"
+  tags:
+    - "k3s"
+    - "cluster"
+*/
+
+// Application defined a cloud endpoint
+type Application struct {
+	Author      string              `yaml:"author"`
+	Name        string              `yaml:"name"`
+	Description string              `yaml:"description"`
+	Template    string              `yaml:"template"`
+	Recipes     map[string][]string `yaml:"recipes"`
+	Tags        []string            `yaml:"tags"`
+	Path        string
+}
+
+// Check validates a recipe
+func (r *Application) Check() error {
+	if r.Name == "" {
+		return fmt.Errorf("Missing name")
+	}
+	if r.Template == " " {
+		return fmt.Errorf("Missing template")
+	}
+
+	return nil
+}
+
+// ApplicationDefinition containers a recipe definition
+type ApplicationDefinition struct {
+	Application Application `yaml:"application"`
+}
+
 // Endpoint defined a cloud endpoint
 type Endpoint struct {
 	Author      string            `yaml:"author"`
