@@ -633,6 +633,7 @@ func injector() {
 				application.Timestamp = time.Now().Unix()
 				application.Namespace = ns
 				application.Public = true
+				application.Template = createdTemplates[t.Application.Template]
 				application.TemplateRecipes = make(map[string][]string)
 				hasError := false
 				for tplVar, recipes := range t.Application.Recipes {
@@ -666,6 +667,7 @@ func injector() {
 				application.Timestamp = time.Now().Unix()
 				application.Namespace = ns
 				application.Public = true
+				application.Template = createdTemplates[t.Application.Template]
 				application.TemplateRecipes = make(map[string][]string)
 				hasError := false
 				for tplVar, recipes := range t.Application.Recipes {
@@ -676,7 +678,7 @@ func injector() {
 							}
 							application.TemplateRecipes[tplVar] = append(application.TemplateRecipes[tplVar], recipeID)
 						} else {
-							log.Error().Msgf("App %s requests recipe %s, but it does not exists!  %s", t.Application.Name, recipe)
+							log.Error().Msgf("App %s requests recipe %s, but it does not exists!", t.Application.Name, recipe)
 							hasError = true
 							break
 						}
