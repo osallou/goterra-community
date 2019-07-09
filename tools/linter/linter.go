@@ -160,7 +160,20 @@ func main() {
 			fmt.Printf("Check:application:%s:base_image:no base image found\n", t.Application.Name)
 			hasError = true
 		}
-		fmt.Printf("Check:application:%s:ok\n", t.Application.Name)
+
+		templateFile := fmt.Sprintf("%s/template/%s/template.yaml", targetDirectory, t.Application.Template)
+		fmt.Printf("Check:application:%s:check:needs:%s\n", t.Application.Name, t.Application.Template)
+		if _, ok := os.Stat(templateFile); ok != nil {
+			fmt.Printf("Check:application:%s:needs:%s:error:notfound\n", t.Application.Name, t.Application.Template)
+			hasError = true
+		}
+
+		if hasError {
+			fmt.Printf("Check:application:%s:ko\n", t.Application.Name)
+
+		} else {
+			fmt.Printf("Check:application:%s:ok\n", t.Application.Name)
+		}
 	}
 
 	if hasError {
