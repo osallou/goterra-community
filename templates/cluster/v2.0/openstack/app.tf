@@ -78,11 +78,11 @@ resource "openstack_compute_instance_v2" "master" {
 
 resource "openstack_networking_floatingip_v2" "masterfloatip" {
   pool = var.public_ip_pool
-  count = var.feature_public_ip == "1" ? 1 : 0
+  count = var.feature_ip_public == "1" ? 1 : 0
 }
 
 resource "openstack_compute_floatingip_associate_v2" "fip_1" {
-  count = var.feature_public_ip == "1" ? 1 : 0
+  count = var.feature_ip_public == "1" ? 1 : 0
   floating_ip = "${openstack_networking_floatingip_v2.masterfloatip[0].address}"
   instance_id = "${openstack_compute_instance_v2.master.id}"
   depends_on = ["openstack_compute_instance_v2.master"]
