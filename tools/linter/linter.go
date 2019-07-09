@@ -161,7 +161,7 @@ func main() {
 			hasError = true
 		}
 
-		templateFile := fmt.Sprintf("%s/template/%s/template.yaml", targetDirectory, t.Application.Template)
+		templateFile := fmt.Sprintf("%s/templates/%s/template.yaml", targetDirectory, t.Application.Template)
 		fmt.Printf("Check:application:%s:check:needs:%s\n", t.Application.Name, t.Application.Template)
 		if _, ok := os.Stat(templateFile); ok != nil {
 			fmt.Printf("Check:application:%s:needs:%s:error:notfound\n", t.Application.Name, templateFile)
