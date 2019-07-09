@@ -1,0 +1,24 @@
+endpoint:
+  kind: "openstack"
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  name: "openstack-genouest"
+  description: "Genouest openstack cloud config"
+  inputs:
+    tenant_name: "name of project"
+    tenant_id: "id of the project"
+  features:
+    disk_ephemeral: "1"
+    disk_shared: "1"
+    ip_public: "0"
+  images:
+    "debian": "1c1c30f4-c787-4953-ba86-a24d5a1aee21"
+  config:
+    auth_url: "https://genostack-api-keystone.genouest.org/v3"
+    domain_id: "0de861d3d0fc43eabf692d6dbb1cc257"
+    network: "provider"
+    user_domain_id: "0de861d3d0fc43eabf692d6dbb1cc257"
+    project_domain_id: "0de861d3d0fc43eabf692d6dbb1cc257"
+    public_ip_pool: ""
+  tags:
+    - "genouest"
+    - "openstack"

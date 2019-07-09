@@ -1,0 +1,24 @@
+endpoint:
+  kind: "openstack"
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  name: "openstack-girofle"
+  description: "Girofle openstack cloud config"
+  inputs:
+    tenant_name: "name of project"
+    tenant_id: "id of the project"
+  features:
+    disk_ephemeral: "1"
+    disk_shared: "0"
+    ip_public: "1"
+  images:
+    "debian": "e220ed50-2e08-4df0-9410-f090a2d754d5"
+  config:
+    auth_url: "http://134.214.34.20:5000/v3"
+    domain_id: "default"
+    network: "cloudlocal"
+    user_domain_id: "default"
+    project_domain_id: "default"
+    public_ip_pool: "public02"
+  tags:
+    - "girofle"
+    - "openstack"
