@@ -1,0 +1,14 @@
+template:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  license: Apache-2.0
+  name: "shared_filesystem"
+  description: "shared filesystem"
+  inputs:
+    volume_size: "volume size of share in Gb"
+  recipes:
+    - "recipes_vm"
+  tags:
+    - "share"
+    - "volume"
+  files:
+    openstack: "app.tf"
