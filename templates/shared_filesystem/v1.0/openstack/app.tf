@@ -34,7 +34,7 @@ provider "openstack" {
 #}
 
 resource "openstack_sharedfilesystem_share_v2" "share_1" {
-  name             = "${var.volume_name}_${var.namespace}"
+  name             = "${var.volume_name}_${var.goterra_namespace}"
   description      = "share filesystem"
   share_proto      = "NFS"
   size             = var.volume_size
