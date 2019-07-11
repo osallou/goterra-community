@@ -331,6 +331,10 @@ func injector() {
 			name := elts[len(elts)-3]
 			version := elts[len(elts)-2]
 			recipe, rerr := getRecipe(ns, name, version)
+			if rerr == nil && recipe.Frozen {
+				log.Error().Str("recipe", name).Str("version", version).Msg("Recipe is frozen, cannot update")
+				continue
+			}
 			if rerr != nil {
 				// Does not exists
 				log.Debug().Msgf("Recipe does not exists %s:%s", name, version)
@@ -438,6 +442,10 @@ func injector() {
 			name := elts[len(elts)-3]
 			version := elts[len(elts)-2]
 			template, rerr := getTemplate(ns, name, version)
+			if rerr == nil && template.Frozen {
+				log.Error().Str("template", name).Str("version", version).Msg("Template is frozen, cannot update")
+				continue
+			}
 			if rerr != nil {
 				// Does not exists
 				log.Debug().Msgf("Template does not exists %s:%s", name, version)
@@ -621,6 +629,10 @@ func injector() {
 			name := elts[len(elts)-3]
 			version := elts[len(elts)-2]
 			application, rerr := getApplication(ns, name, version)
+			if rerr == nil && application.Frozen {
+				log.Error().Str("application", name).Str("version", version).Msg("App is frozen, cannot update")
+				continue
+			}
 			if rerr != nil {
 				// Does not exists
 				log.Debug().Msgf("Application does not exists %s", name)
@@ -630,6 +642,7 @@ func injector() {
 				application.Description = t.Application.Description
 				application.Remote = name
 				application.RemoteVersion = version
+				application.Version = version
 				application.Timestamp = time.Now().Unix()
 				application.Namespace = ns
 				application.Public = true
@@ -662,8 +675,7 @@ func injector() {
 				application.Name = t.Application.Name
 				application.Image = baseImages
 				application.Description = t.Application.Description
-				application.Remote = name
-				application.RemoteVersion = version
+				application.Version = version
 				application.Timestamp = time.Now().Unix()
 				application.Namespace = ns
 				application.Public = true

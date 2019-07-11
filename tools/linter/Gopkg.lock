@@ -7,23 +7,23 @@
   name = "github.com/osallou/goterra-community"
   packages = ["tools/model"]
   pruneopts = "UT"
-  revision = "7c6c430c7bf2110edf4b93842ca46571ce237355"
+  revision = "65041875003f748c55a80713810e17cc2ff06afd"
 
 [[projects]]
   branch = "master"
-  digest = "1:aed6f7a9659b62ba6e3f2606d8e8a99aa29937451bb138273c322c7747e58ed3"
+  digest = "1:76e798c3ef6f18f4a453574c84b3a011bb2a8d03c80d1d30588c473f3f8d08b9"
   name = "github.com/osallou/goterra-lib"
   packages = ["lib/model"]
   pruneopts = "UT"
-  revision = "2397d0d70a01008185df077c9c958dc57398153f"
+  revision = "d4e21588666f5a4b0f574364eb7b10ca4b449070"
 
 [[projects]]
   digest = "1:1cabe44fb226a08664539c7ff79f25940284d9e2116187a74c90472a51c257ca"
   name = "go.mongodb.org/mongo-driver"
   packages = ["bson/primitive"]
   pruneopts = "UT"
-  revision = "582ff343271e8893d785ff094855498c285bce0a"
-  version = "v1.0.3"
+  revision = "0d1270edf53072da4da781b76d2e1db58831152f"
+  version = "v1.0.4"
 
 [[projects]]
   digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"

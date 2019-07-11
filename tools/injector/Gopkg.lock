@@ -41,12 +41,12 @@
   revision = "2a8bb927dd31d8daada140a5d09578521ce5c36a"
 
 [[projects]]
-  digest = "1:664d37ea261f0fc73dd17f4a1f5f46d01fbb0b0d75f6375af064824424109b7d"
+  digest = "1:bf3f2edc757b0fcee5946f9c88c3531b3766cde4195f9c5956fc4a84b72b0699"
   name = "github.com/gorilla/handlers"
   packages = ["."]
   pruneopts = "UT"
-  revision = "7e0847f9db758cdebd26c149d0ae9d5d0b9c98ce"
-  version = "v1.4.0"
+  revision = "415c4810185c26aa35ca0315470d77697000794b"
+  version = "v1.4.1"
 
 [[projects]]
   digest = "1:cbec35fe4d5a4fba369a656a8cd65e244ea2c743007d8f6c1ccb132acf9d1296"
@@ -142,18 +142,18 @@
   name = "github.com/osallou/goterra-community"
   packages = ["tools/model"]
   pruneopts = "UT"
-  revision = "7c6c430c7bf2110edf4b93842ca46571ce237355"
+  revision = "65041875003f748c55a80713810e17cc2ff06afd"
 
 [[projects]]
   branch = "master"
-  digest = "1:abceae2635ea0c3f049843c1a62d18af8de75fbb66ee93011fd336560fa65281"
+  digest = "1:736974889d73d2a2d819a139b0f835d42cbb38dc4c23db3fc71e7b3f14634d0f"
   name = "github.com/osallou/goterra-lib"
   packages = [
     "lib/config",
     "lib/model",
   ]
   pruneopts = "UT"
-  revision = "2397d0d70a01008185df077c9c958dc57398153f"
+  revision = "d4e21588666f5a4b0f574364eb7b10ca4b449070"
 
 [[projects]]
   digest = "1:b2ee62e09bec113cf086d2ce0769efcc7bf79481aba8373fd8f7884e94df3462"
@@ -230,7 +230,7 @@
   revision = "73f8eece6fdcd902c185bf651de50f3828bed5ed"
 
 [[projects]]
-  digest = "1:6274d7d09c6836ab5deba524155f29c77ce0ae86e853cd6fc3a51147465f8c8f"
+  digest = "1:721dfafdcdef689834240d27526505237b230b7dea54df28ec299ab182cfbd1f"
   name = "go.mongodb.org/mongo-driver"
   packages = [
     "bson",
@@ -265,8 +265,8 @@
     "x/network/wiremessage",
   ]
   pruneopts = "UT"
-  revision = "582ff343271e8893d785ff094855498c285bce0a"
-  version = "v1.0.3"
+  revision = "0d1270edf53072da4da781b76d2e1db58831152f"
+  version = "v1.0.4"
 
 [[projects]]
   branch = "master"
@@ -316,7 +316,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:7e3e63385ebe2dd5210be1534c516d8ae33c7ffac74126e5243d43ba7222e0d4"
+  digest = "1:a401497567643b1f62cc7f7db6dc987307dabab80466210b2477c0cbd003c526"
   name = "golang.org/x/sys"
   packages = [
     "cpu",
@@ -324,7 +324,7 @@
     "windows",
   ]
   pruneopts = "UT"
-  revision = "04f50cda93cbb67f2afa353c52f342100e80e625"
+  revision = "6ec70d6a5542cba804c6d16ebe8392601a0b7b60"
 
 [[projects]]
   digest = "1:1093f2eb4b344996604f7d8b29a16c5b22ab9e1b25652140d3fede39f640d5cd"
