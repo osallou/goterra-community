@@ -17,6 +17,7 @@ type Application struct {
 	Recipes     map[string][]string `yaml:"recipes"`
 	Tags        []string            `yaml:"tags"`
 	Path        string
+	Defaults    map[string][]string `yaml:"defaults"`
 }
 
 // checkRecipeImage checks (sub)recipe exists, returns base image of recipe
@@ -137,6 +138,7 @@ type Endpoint struct {
 	Images      map[string]string `yaml:"images"`
 	Tags        []string          `yaml:"tags"`
 	Path        string
+	Defaults    map[string][]string `yaml:"defaults"`
 }
 
 // Check validates a recipe
@@ -174,6 +176,7 @@ type Recipe struct {
 	Base        []string          `yaml:"base"`
 	Parent      string            `yaml:"parent"`
 	Path        string
+	Defaults    map[string][]string `yaml:"defaults"`
 }
 
 // Check validates a recipe
@@ -217,7 +220,8 @@ type Template struct {
 	Tags        []string          `yaml:"tags"`
 	Files       map[string]string `yaml:"files"`
 	Path        string
-	Recipes     []string `yaml:"recipes"`
+	Recipes     []string            `yaml:"recipes"`
+	Defaults    map[string][]string `yaml:"defaults"`
 }
 
 // TemplateDefinition containers a template definition
