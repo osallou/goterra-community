@@ -355,6 +355,7 @@ func injector() {
 					log.Warn().Msgf("Could not read recipe script %s", t.Recipe.Path)
 					continue
 				}
+				recipe.Defaults = t.Recipe.Defaults
 				recipe.Script = string(script)
 				recipe.ParentRecipe = ""
 				if t.Recipe.Parent != "" {
@@ -391,6 +392,7 @@ func injector() {
 					log.Error().Msgf("Could not read recipe script %s", t.Recipe.Path)
 					continue
 				}
+				recipe.Defaults = t.Recipe.Defaults
 				recipe.Script = string(script)
 				recipe.ParentRecipe = ""
 				if t.Recipe.Parent != "" {
@@ -460,6 +462,7 @@ func injector() {
 				template.Remote = name
 				template.RemoteVersion = version
 				template.Version = version
+				template.Defaults = t.Template.Defaults
 				template.Data = make(map[string]string)
 				for cloud, file := range t.Template.Files {
 					scriptFile := fmt.Sprintf("%s/templates/%s/%s/%s/%s", gitDir, name, version, cloud, file)
@@ -489,6 +492,7 @@ func injector() {
 				template.Description = t.Template.Description
 				template.Public = true
 				template.Version = version
+				template.Defaults = t.Template.Defaults
 				template.Data = make(map[string]string)
 				for cloud, file := range t.Template.Files {
 					scriptFile := fmt.Sprintf("%s/templates/%s/%s/%s/%s", gitDir, name, version, cloud, file)
@@ -541,7 +545,7 @@ func injector() {
 				endpoint.Namespace = ns
 				endpoint.Public = true
 				endpoint.Kind = t.Endpoint.Kind
-
+				endpoint.Defaults = t.Endpoint.Defaults
 				endpoint.Features = t.Endpoint.Features
 				if endpoint.Features == nil {
 					endpoint.Features = make(map[string]string)
@@ -571,6 +575,7 @@ func injector() {
 				endpoint.Namespace = ns
 				endpoint.Public = true
 				endpoint.Kind = t.Endpoint.Kind
+				endpoint.Defaults = t.Endpoint.Defaults
 				endpoint.Features = t.Endpoint.Features
 				if endpoint.Features == nil {
 					endpoint.Features = make(map[string]string)
@@ -646,6 +651,7 @@ func injector() {
 				application.Timestamp = time.Now().Unix()
 				application.Namespace = ns
 				application.Public = true
+				application.Defaults = t.Application.Defaults
 				application.Template = createdTemplates[t.Application.Template]
 				application.TemplateRecipes = make(map[string][]string)
 				hasError := false
@@ -679,6 +685,7 @@ func injector() {
 				application.Timestamp = time.Now().Unix()
 				application.Namespace = ns
 				application.Public = true
+				application.Defaults = t.Application.Defaults
 				application.Template = createdTemplates[t.Application.Template]
 				application.TemplateRecipes = make(map[string][]string)
 				hasError := false

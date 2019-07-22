@@ -138,22 +138,22 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:bb46089914151e0fee13cddd0bcf1bf2d85ad5f4157558a547df1675b33a94a4"
+  digest = "1:964d3bf91de45ac83ff136c6eb2429e6b30c5f1a90482e55c2f0e88f0c6c66de"
   name = "github.com/osallou/goterra-community"
   packages = ["tools/model"]
   pruneopts = "UT"
-  revision = "65041875003f748c55a80713810e17cc2ff06afd"
+  revision = "b3400b05f369772a038cbabbc1e781a188a7001c"
 
 [[projects]]
   branch = "master"
-  digest = "1:736974889d73d2a2d819a139b0f835d42cbb38dc4c23db3fc71e7b3f14634d0f"
+  digest = "1:18523a887f68150c94c27ed983d34dfdc3d6220fa9935a481f37bf89199175bd"
   name = "github.com/osallou/goterra-lib"
   packages = [
     "lib/config",
     "lib/model",
   ]
   pruneopts = "UT"
-  revision = "d4e21588666f5a4b0f574364eb7b10ca4b449070"
+  revision = "9db94146b87f151f6f76e5033229aebd9981d658"
 
 [[projects]]
   digest = "1:b2ee62e09bec113cf086d2ce0769efcc7bf79481aba8373fd8f7884e94df3462"
@@ -316,7 +316,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:a401497567643b1f62cc7f7db6dc987307dabab80466210b2477c0cbd003c526"
+  digest = "1:34a0c43f2d706c6292cd418409b68ae23657c8a5e960ab97bc199972d4e86d0c"
   name = "golang.org/x/sys"
   packages = [
     "cpu",
@@ -324,7 +324,7 @@
     "windows",
   ]
   pruneopts = "UT"
-  revision = "6ec70d6a5542cba804c6d16ebe8392601a0b7b60"
+  revision = "fae7ac547cb717d141c433a2a173315e216b64c4"
 
 [[projects]]
   digest = "1:1093f2eb4b344996604f7d8b29a16c5b22ab9e1b25652140d3fede39f640d5cd"
