@@ -22,3 +22,7 @@ endpoint:
   tags:
     - "genouest"
     - "openstack"
+  defaults:
+    "flavor_name":
+      - "m1.small"
+      - "m1.large"
