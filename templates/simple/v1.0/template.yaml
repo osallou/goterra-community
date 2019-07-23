@@ -5,6 +5,8 @@ template:
   description: "shared filesystem"
   inputs:
     volume_size: "volume size of share in Gb"
+    key_pair: "keypair"
+    flavor_name: "name of flavor"
   recipes:
     - "recipes_vm"
   tags:
