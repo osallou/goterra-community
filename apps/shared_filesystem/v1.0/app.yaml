@@ -3,7 +3,7 @@ application:
   name: "shared-filesystem"
   description: "Creates a shared file system"
   template: "shared_filesystem/v1.0"
-  recipes: []
+  recipes: null
   tags:
     - "storage"
     - "shared"
