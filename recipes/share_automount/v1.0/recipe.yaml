@@ -1,0 +1,13 @@
+recipe:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  license: Apache-2.0
+  name: "share_automount"
+  description: "mount share disk based on variable shared_path"
+  inputs:
+    shared_path: "optional shared volume path"
+  base:
+    - "debian"
+  parent: null
+  tags:
+    - "storage"
+    - "disk"
