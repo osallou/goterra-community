@@ -1,0 +1,9 @@
+application:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  name: "shared-filesystem"
+  description: "Creates a shared file system"
+  template: "shared_filesystem/v1.0"
+  recipes: []
+  tags:
+    - "storage"
+    - "shared"
