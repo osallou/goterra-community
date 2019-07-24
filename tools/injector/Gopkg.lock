@@ -41,12 +41,12 @@
   revision = "2a8bb927dd31d8daada140a5d09578521ce5c36a"
 
 [[projects]]
-  digest = "1:bf3f2edc757b0fcee5946f9c88c3531b3766cde4195f9c5956fc4a84b72b0699"
+  digest = "1:b117faf01abdbdadd7b8ceeae74cd1369c1b073fef41aee8b674c9d704a54c16"
   name = "github.com/gorilla/handlers"
   packages = ["."]
   pruneopts = "UT"
-  revision = "415c4810185c26aa35ca0315470d77697000794b"
-  version = "v1.4.1"
+  revision = "8a3748addc242fc560bd6d4ff28b0374c010b1b4"
+  version = "v1.4.2"
 
 [[projects]]
   digest = "1:cbec35fe4d5a4fba369a656a8cd65e244ea2c743007d8f6c1ccb132acf9d1296"
@@ -142,18 +142,18 @@
   name = "github.com/osallou/goterra-community"
   packages = ["tools/model"]
   pruneopts = "UT"
-  revision = "b3400b05f369772a038cbabbc1e781a188a7001c"
+  revision = "4902ab1a7b101b38847d595ed124bb26ae3e53ac"
 
 [[projects]]
   branch = "master"
-  digest = "1:18523a887f68150c94c27ed983d34dfdc3d6220fa9935a481f37bf89199175bd"
+  digest = "1:d41c06176e1858745bf9b38e60215fb14dbfc1dc2b9403d9755972e9a3a0d2f2"
   name = "github.com/osallou/goterra-lib"
   packages = [
     "lib/config",
     "lib/model",
   ]
   pruneopts = "UT"
-  revision = "9db94146b87f151f6f76e5033229aebd9981d658"
+  revision = "a59a669f2ca8e804d32b8ffcf5d7223612d73f5d"
 
 [[projects]]
   digest = "1:b2ee62e09bec113cf086d2ce0769efcc7bf79481aba8373fd8f7884e94df3462"
@@ -304,7 +304,7 @@
     "proxy",
   ]
   pruneopts = "UT"
-  revision = "da137c7871d730100384dbcf36e6f8fa493aef5b"
+  revision = "ca1201d0de80cfde86cb01aea620983605dfe99b"
 
 [[projects]]
   branch = "master"

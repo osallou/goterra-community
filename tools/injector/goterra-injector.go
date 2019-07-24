@@ -623,10 +623,17 @@ func injector() {
 				appRecipes = append(appRecipes, foundRecipes[expectedRecipe])
 			}
 
-			baseImages, baseErr := t.Application.GetAppBaseImages(appRecipes, foundRecipes)
-			if baseErr != nil {
-				log.Error().Msgf("Application %s could not find a base image between recipes", t.Application.Path)
-				continue
+			var baseImages []string
+			var baseErr error
+			if len(t.Application.Recipes) == 0 && config.DefaultImage != "" {
+				baseImages = make([]string, 1)
+				baseImages[0] = config.DefaultImage
+			} else {
+				baseImages, baseErr = t.Application.GetAppBaseImages(appRecipes, foundRecipes)
+				if baseErr != nil {
+					log.Error().Msgf("Application %s could not find a base image between recipes", t.Application.Path)
+					continue
+				}
 			}
 			log.Error().Msgf("Base images: %+v", baseImages)
 
