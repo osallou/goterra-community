@@ -7,6 +7,8 @@ template:
     volume_size: "volume size of share in Gb"
     key_pair: "keypair"
     flavor_name: "name of flavor"
+    shared_id: "optional shared volume id"
+    shared_path: "optional shared volume path"
   recipes:
     - "recipes_vm"
   tags:

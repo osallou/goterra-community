@@ -63,6 +63,17 @@ resource "openstack_compute_instance_v2" "master" {
   user_data = file("${path.module}/${goterra_application.master.cloudinit}")
 }
 
+resource "openstack_sharedfilesystem_share_access_v2" "share_access_1" {
+  count = var.feature_disk_shared == "1" && var.shared_id != "" ? 1 : 0
+  share_id     = var.shared_id
+  access_type  = "ip"
+  access_to    = openstack_compute_instance_v2.master.network.0.fixed_ip_v4
+  access_level = "rw"
+
+  depends_on = ["openstack_compute_instance_v2.master"]
+}
+
+
 resource "openstack_networking_floatingip_v2" "masterfloatip" {
   pool = var.public_ip_pool
   count = var.feature_ip_public == "1" ? 1 : 0
