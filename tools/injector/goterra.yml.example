@@ -21,3 +21,5 @@ deploy:
         path: "/tmp"
 
 amqp: "amqp://guest:guest@localhost:5672/"
+
+default_image: "debian"
