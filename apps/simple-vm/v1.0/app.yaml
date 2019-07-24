@@ -6,5 +6,6 @@ application:
   recipes:
     recipes_vm:
       - "disk_block_automount/v1.0"
+      - "share_automount/v1.0"
   tags:
     - "simple"
