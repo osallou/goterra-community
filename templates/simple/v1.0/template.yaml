@@ -4,7 +4,7 @@ template:
   name: "shared_filesystem"
   description: "shared filesystem"
   inputs:
-    volume_size: "volume size of share in Gb"
+    volume_size: "volume size of ephemeral disk in Gb"
     key_pair: "keypair"
     flavor_name: "name of flavor"
     shared_id: "optional shared volume id"
