@@ -1,0 +1,13 @@
+recipe:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  license: Apache-2.0
+  name: "conda"
+  description: "install conda"
+  inputs: null
+  base:
+    - "debian"
+    - "centos"
+  parent: null
+  tags:
+    - "conda"
+    - "software"
