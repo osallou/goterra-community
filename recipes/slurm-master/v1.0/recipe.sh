@@ -65,7 +65,7 @@ for i in $(seq 0 ${nbslave})
 do
   echo "NodeName=slave${i} CPUs=${cpu} CoresPerSocket=${cpu} ThreadsPerCore=1 RealMemory=${rammb} State=UNKNOWN " >> /etc/slurm-llnl/slurm.conf
   # Get nodes ip address for routing
-  slaveip=`/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN get slurm_ip_slave${i} ${myip}``
+  slaveip=`/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN get slurm_ip_slave${i}`
   echo "${slaveip} slave{i}" >> /etc/hosts
 done
 
