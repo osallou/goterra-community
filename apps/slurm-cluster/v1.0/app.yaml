@@ -1,0 +1,14 @@
+application:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  name: "slurm-cluster"
+  description: "slurm cluster [BETA]"
+  template: "cluster/v2.0"
+  recipes:
+    recipes_master:
+      - "disk_block_automount/v1.0"
+      - "slurm-master/v1.0"
+    recipes_slave:
+      - "slurm-slave/v1.0"
+  tags:
+    - "slurm"
+    - "cluster"
