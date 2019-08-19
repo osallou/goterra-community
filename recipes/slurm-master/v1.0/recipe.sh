@@ -1,6 +1,6 @@
 #!/bin/bash
 
-nbslave=100
+nbslave=${slave_count}
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
@@ -54,23 +54,27 @@ SlurmctldLogFile=/var/log/slurm-llnl/slurmctld.log
 SlurmdLogFile=/var/log/slurm-llnl/slurmd.log
 
 DefMemPerCPU=1000
-PartitionName=cloud Nodes=slurm-[1-${nbslave}] Default=YES MaxTime=INFINITE State=UP
+PartitionName=cloud Nodes=slave[0-${nbslave}] Default=YES MaxTime=INFINITE State=UP
 EOL
 
 cpu=`grep -c ^processor /proc/cpuinfo`
-ram=`grep MemTotal /proc/meminfo | awk '{print $2/1000}'`
+ram=`grep MemTotal /proc/meminfo | awk '{print $2/1000-1000}'`  # remove 1000M for slurm
 rammb=`echo $ram | cut -f1 -d"."`
 
-for i in $(seq 1 ${nbslave})
+for i in $(seq 0 ${nbslave})
 do
-  echo "NodeName=slave-${i} CPUs=${cpu} CoresPerSocket=${cpu} ThreadsPerCore=1 RealMemory=${rammb} State=UNKNOWN " >> /etc/slurm-llnl/slurm.conf
+  echo "NodeName=slave${i} CPUs=${cpu} CoresPerSocket=${cpu} ThreadsPerCore=1 RealMemory=${rammb} State=UNKNOWN " >> /etc/slurm-llnl/slurm.conf
+  # Get nodes ip address for routing
+  slaveip=`/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN get slurm_ip_slave${i} ${myip}``
+  echo "${slaveip} slave{i}" >> /etc/hosts
 done
 
 service slurmctld start
 # service slurmd start
 
 export CONFIG=`cat /etc/slurm-llnl/slurm.conf`
-export MUNGE=̀`cat /etc/munge/munge.key | base64`
+cat /etc/munge/munge.key | base64 > /tmp/munge
 export TOKEN="${GOT_TOKEN}"
-/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN put slurm_config ${CONFIG}
-/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN put slurm_munge ${MUNGE}
+/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN put slurm_config @/etc/slurm-llnl/slurm.conf
+/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN put slurm_munge @/tmp/munge
+rm /tmp/munge

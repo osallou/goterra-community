@@ -1,4 +1,8 @@
-#!/bin/bash 
+#!/bin/bash
+
+my=`hostname`
+myip=`ip route get 1 | awk '{print $NF;exit}'`
+/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN put slurm_ip_${my} ${myip}
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
@@ -16,11 +20,11 @@ ConstrainRAMSpace=yes
 EOL
 
 export TOKEN="${GOT_TOKEN}"
-CONFIG=`/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN put slurm_config`
-MUNGE=`/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN put slurm_munge`
-echo $MUNGE | base64 -d > /etc/munge/munge.key
+CONFIG=`/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN get slurm_config`
+MUNGE=`/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN get slurm_munge`
+echo "$MUNGE" | base64 -d > /etc/munge/munge.key
 service munge restart
-echo $CONFIG > /etc/slurm-llnl/slurm.conf
+echo "$CONFIG" > /etc/slurm-llnl/slurm.conf
 
 
 service slurmd start
