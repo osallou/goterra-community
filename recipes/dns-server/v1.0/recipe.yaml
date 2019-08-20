@@ -1,0 +1,13 @@
+recipe:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  license: Apache-2.0
+  name: "dns_master"
+  description: "DNS resolver (master)"
+  inputs: null
+  base:
+    - "debian"
+  parent: null
+  tags:
+    - "master"
+    - "dns"
+    - "consul"

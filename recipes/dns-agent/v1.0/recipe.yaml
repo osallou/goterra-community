@@ -1,0 +1,13 @@
+recipe:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  license: Apache-2.0
+  name: "dns_agent"
+  description: "DNS resolver (agent)"
+  inputs: null
+  base:
+    - "debian"
+  parent: null
+  tags:
+    - "slave"
+    - "dns"
+    - "consul"
