@@ -4,6 +4,8 @@ nbslave=${slave_count}
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
+
+# Slurm install
 apt-get install -y mailutils slurm slurmd slurmctld sview
 
 mkdir -p /var/spool/slurm
@@ -20,6 +22,7 @@ EOL
 
 master=`hostname`
 masterip=`ip route get 1 | awk '{print $NF;exit}'`
+
 cat > /etc/slurm-llnl/slurm.conf << EOL
 ClusterName=cloud
 ControlMachine=${master}
@@ -65,8 +68,8 @@ for i in $(seq 0 ${nbslave})
 do
   echo "NodeName=slave${i} CPUs=${cpu} CoresPerSocket=${cpu} ThreadsPerCore=1 RealMemory=${rammb} State=UNKNOWN " >> /etc/slurm-llnl/slurm.conf
   # Get nodes ip address for routing
-  slaveip=`/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN get slurm_ip_slave${i} ${myip}``
-  echo "${slaveip} slave{i}" >> /etc/hosts
+  #slaveip=`/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN get slurm_ip_slave${i} ${myip}``
+  #echo "${slaveip} slave{i}" >> /etc/hosts
 done
 
 service slurmctld start
@@ -78,3 +81,5 @@ export TOKEN="${GOT_TOKEN}"
 /opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN put slurm_config @/etc/slurm-llnl/slurm.conf
 /opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN put slurm_munge @/tmp/munge
 rm /tmp/munge
+
+
