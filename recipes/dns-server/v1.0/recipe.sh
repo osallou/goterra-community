@@ -6,11 +6,11 @@ apt-get update
 # Consul install (DNS)
 CONSUL_VERSION=1.5.3
 apt-get install -y unzip wget bind9 bind9utils
-wget https://releases.hashicorp.com/consul/${CONSUL_VERSION}_/consul_${CONSUL_VERSION}_linux_amd64.zip
-unzip consul_${CONSUL_VERSION}__linux_amd64.zip
+wget https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip
+unzip consul_${CONSUL_VERSION}_linux_amd64.zip
 chmod +x ./consul
 mv ./consul /usr/bin/
-rm consul_${CONSUL_VERSION}__linux_amd64.zip
+rm consul_${CONSUL_VERSION}_linux_amd64.zip
 mkdir -p /opt/consul
 
 cat > /etc/bind/named.conf.options << EOL
@@ -41,6 +41,8 @@ EOL
 
 service bind9 restart
 
+consulip=`ip route get 1 | awk '{print $NF;exit}'`
+
 cat > /lib/systemd/system/consul.service << EOL
 # Consul systemd service unit file
 [Unit]
@@ -54,7 +56,8 @@ Type=simple
 ExecStart=/usr/bin/consul agent \
         --server \
         --data-dir /opt/consul \
-        --bootstrap-expect 1
+        --bootstrap-expect 1 \
+        --bind ${consulip}
 
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGINT
@@ -75,5 +78,4 @@ search node.consul
 nameserver 127.0.0.1
 EOL
 
-consulip=`ip route get 1 | awk '{print $NF;exit}'`
 /opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN put consul_advertise ${consulip}

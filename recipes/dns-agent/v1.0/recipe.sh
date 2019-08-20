@@ -6,11 +6,11 @@ apt-get update
 # Consul install (DNS)
 CONSUL_VERSION=1.5.3
 apt-get install -y unzip wget bind9 bind9utils
-wget https://releases.hashicorp.com/consul/${CONSUL_VERSION}_/consul_${CONSUL_VERSION}_linux_amd64.zip
-unzip consul_${CONSUL_VERSION}__linux_amd64.zip
+wget https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip
+unzip consul_${CONSUL_VERSION}_linux_amd64.zip
 chmod +x ./consul
 mv ./consul /usr/bin/
-rm consul_${CONSUL_VERSION}__linux_amd64.zip
+rm consul_${CONSUL_VERSION}_linux_amd64.zip
 mkdir -p /opt/consul
 
 
@@ -44,6 +44,7 @@ EOL
 
 service bind9 restart
 
+
 cat > /lib/systemd/system/consul.service << EOL
 # Consul systemd service unit file
 [Unit]
@@ -55,6 +56,7 @@ Wants=network-online.target
 [Service]
 Type=simple
 ExecStart=/usr/bin/consul agent \
+        --bind ${consulip} \
         --data-dir /opt/consul \
         --join=${consulip}
 
