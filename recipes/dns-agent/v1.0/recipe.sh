@@ -15,6 +15,8 @@ mkdir -p /opt/consul
 
 
 consulip=`/opt/got/goterra-cli --url ${GOT_URL} --deployment ${GOT_DEP} --token $TOKEN get consul_advertise`
+myip=`ip route get 1 | awk '{print $NF;exit}'`
+
 
 cat > /etc/bind/named.conf.options << EOL
 options {
@@ -56,7 +58,7 @@ Wants=network-online.target
 [Service]
 Type=simple
 ExecStart=/usr/bin/consul agent \
-        --bind ${consulip} \
+        --bind ${myip} \
         --data-dir /opt/consul \
         --join=${consulip}
 
