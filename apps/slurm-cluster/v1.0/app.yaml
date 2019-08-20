@@ -6,8 +6,10 @@ application:
   recipes:
     recipes_master:
       - "disk_block_automount/v1.0"
+      - "dns-server/v1.0"
       - "slurm-master/v1.0"
     recipes_slave:
+      - "dns-agent/v1.0"
       - "slurm-slave/v1.0"
   tags:
     - "slurm"
