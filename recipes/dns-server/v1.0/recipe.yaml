@@ -2,7 +2,7 @@ recipe:
   author: Olivier Sallou <olivier.sallou@irisa.fr>
   license: Apache-2.0
   name: "dns_master"
-  description: "DNS resolver (master)"
+  description: "DNS resolver (master). Helps to access VMs by name instead of IP address. Master need to be installed on one VM, other VM must use dns-agent recipe."
   inputs: null
   base:
     - "debian"
