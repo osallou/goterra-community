@@ -1,7 +1,7 @@
 application:
   author: Olivier Sallou <olivier.sallou@irisa.fr>
   name: "slurm-cluster"
-  description: "slurm cluster [BETA]"
+  description: "slurm cluster"
   template: "cluster/v2.0"
   recipes:
     recipes_master:
