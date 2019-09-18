@@ -1,6 +1,6 @@
 #!/bin/bash
 apt-get install -y wget git python3 python3-pip
-wget -O /usr/local/bin/k3s https://github.com/rancher/k3s/releases/download/v0.5.0/k3s
+wget -O /usr/local/bin/k3s https://github.com/rancher/k3s/releases/download/v0.8.1/k3s
 chmod +x /usr/local/bin/k3s
 wget -O /lib/systemd/system/k3s.service https://raw.githubusercontent.com/rancher/k3s/master/k3s.service
 mkdir -p /etc/systemd/system
