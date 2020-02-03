@@ -1,0 +1,11 @@
+recipe:
+  author: Olivier Sallou <olivier.sallou@irisa.fr>
+  license: Apache-2.0
+  name: "jupyterhub"
+  description: "JupyterHub"
+  inputs: null
+  base:
+    - "debian"
+  parent: null
+  tags:
+    - "jupyter"

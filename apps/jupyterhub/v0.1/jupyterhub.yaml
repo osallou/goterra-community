@@ -1,0 +1,12 @@
+application:
+    author: Olivier Sallou <olivier.sallou@irisa.fr>
+    name: "jupyterhub"
+    description: "Jupyter Hub VM"
+    template: "simple/v1.0"
+    recipes:
+      recipes_vm:
+        - "disk_block_automount/v1.0"
+        - "share_automount/v1.0"
+        - "jupyterhub"
+    tags:
+      - "simple"
