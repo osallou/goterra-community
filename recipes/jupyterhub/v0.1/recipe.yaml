@@ -5,7 +5,7 @@ recipe:
   description: "JupyterHub, snap install fails on debian 9, not debian 10"
   inputs: null
   base:
-    - "debian"
+    - "debian10"
   parent: null
   tags:
     - "jupyter"

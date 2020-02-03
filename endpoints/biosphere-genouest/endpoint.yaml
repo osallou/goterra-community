@@ -12,6 +12,7 @@ endpoint:
     ip_public: "0"
   images:
     "debian": "1c1c30f4-c787-4953-ba86-a24d5a1aee21"
+    "debian10": "f4ff0296-e65f-4294-a94b-44a17f369158"
   config:
     auth_url: "https://genostack-api-keystone.genouest.org/v3"
     domain_id: "851b4b29ba404f2f8c48fd9a54b2ed8a"

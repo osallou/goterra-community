@@ -6,6 +6,7 @@ recipe:
   inputs: null
   base:
     - "debian"
+    - "debian10"
   parent: null
   tags:
     - "storage"
