@@ -6,6 +6,7 @@ import (
 	"path"
 
 	terraModel "github.com/osallou/goterra-lib/lib/model"
+	"github.com/rs/zerolog/log"
 )
 
 // Application defined a cloud endpoint
@@ -63,9 +64,38 @@ func removeDuplicates(elements []string) []string {
 	return result
 }
 
+func intersection(s1, s2 []string) (inter []string) {
+	hash := make(map[string]bool)
+	for _, e := range s1 {
+		hash[e] = true
+	}
+	for _, e := range s2 {
+		// If elements present in the hashmap then append intersection list.
+		if hash[e] {
+			inter = append(inter, e)
+		}
+	}
+	//Remove dups from slice.
+	inter = removeDups(inter)
+	return
+}
+
+//Remove dups from slice.
+func removeDups(elements []string) (nodups []string) {
+	encountered := make(map[string]bool)
+	for _, element := range elements {
+		if !encountered[element] {
+			nodups = append(nodups, element)
+			encountered[element] = true
+		}
+	}
+	return
+}
+
+// GetAppBaseImages finds intersection of possible images between recipes
 func (r *Application) GetAppBaseImages(appRecipes []terraModel.Recipe, recipes map[string]terraModel.Recipe) ([]string, error) {
 	possibleBaseImagesNew := true
-	possibleBaseImagesSet := make(map[string]bool, 0)
+	//possibleBaseImagesSet := make(map[string]bool, 0)
 	possibleBaseImages := make([]string, 0)
 
 	for _, recInfo := range appRecipes {
@@ -74,33 +104,51 @@ func (r *Application) GetAppBaseImages(appRecipes []terraModel.Recipe, recipes m
 			return nil, parentErr
 		}
 
-		gotACommonBaseImage := false
+		//gotACommonBaseImage := false
 		// populating for first recipe
 		if possibleBaseImagesNew {
-			gotACommonBaseImage = true
+			possibleBaseImages = parentBaseImages
 			possibleBaseImagesNew = false
-			possibleBaseImages = append(possibleBaseImages, parentBaseImages...)
-			for _, availableImage := range parentBaseImages {
-				possibleBaseImagesSet[availableImage] = true
-			}
+			log.Debug().Msgf("bases %+v", parentBaseImages)
+			/*
+				gotACommonBaseImage = true
+				possibleBaseImagesNew = false
+				for _, availableImage := range parentBaseImages {
+					possibleBaseImagesSet[availableImage] = true
+				}
+			*/
 		} else {
 			possibleBaseImagesNew = false
-			for _, availableImage := range parentBaseImages {
-				if _, ok := possibleBaseImagesSet[availableImage]; ok {
-					possibleBaseImages = append(possibleBaseImages, availableImage)
-					gotACommonBaseImage = true
-				}
-			}
+			possibleBaseImages = intersection(possibleBaseImages, parentBaseImages)
+			log.Debug().Msgf("bases %+v", parentBaseImages)
+			log.Debug().Msgf("intersect %+v", possibleBaseImages)
+
+			/*
+				for _, availableImage := range parentBaseImages {
+					if _, ok := possibleBaseImagesSet[availableImage]; ok {
+						gotACommonBaseImage = true
+					} else {
+						possibleBaseImagesSet[availableImage] = false
+					}
+				}*/
 		}
 
-		if !gotACommonBaseImage {
+		//if !gotACommonBaseImage {
+		if len(possibleBaseImages) == 0 {
 			// No common base image in recipes
 			return nil, fmt.Errorf("No common base image in recipes")
 		}
 
 	}
 
-	return removeDuplicates(possibleBaseImages), nil
+	/*
+		for k, v := range possibleBaseImagesSet {
+			if v {
+				possibleBaseImages = append(possibleBaseImages, k)
+			}
+		}
+	*/
+	return possibleBaseImages, nil
 }
 
 // Check validates a recipe
