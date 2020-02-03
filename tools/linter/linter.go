@@ -155,11 +155,12 @@ func main() {
 			appRecipes = append(appRecipes, foundRecipes[expectedRecipe])
 		}
 
-		_, baseErr := t.Application.GetAppBaseImages(appRecipes, foundRecipes)
+		bases, baseErr := t.Application.GetAppBaseImages(appRecipes, foundRecipes)
 		if baseErr != nil {
 			fmt.Printf("Check:application:%s:base_image:no base image found\n", t.Application.Name)
 			hasError = true
 		}
+		fmt.Printf("Check:application:%s:bases %+v\n", t.Application.Name, bases)
 
 		templateFile := fmt.Sprintf("%s/templates/%s/template.yaml", targetDirectory, t.Application.Template)
 		fmt.Printf("Check:application:%s:check:needs:%s\n", t.Application.Name, t.Application.Template)

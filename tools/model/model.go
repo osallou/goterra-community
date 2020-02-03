@@ -97,7 +97,6 @@ func (r *Application) GetAppBaseImages(appRecipes []terraModel.Recipe, recipes m
 	possibleBaseImagesNew := true
 	//possibleBaseImagesSet := make(map[string]bool, 0)
 	possibleBaseImages := make([]string, 0)
-
 	for _, recInfo := range appRecipes {
 		parentBaseImages, parentErr := checkRecipeImage(recInfo, recipes)
 		if parentErr != nil {
