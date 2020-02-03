@@ -2,7 +2,7 @@ recipe:
   author: Olivier Sallou <olivier.sallou@irisa.fr>
   license: Apache-2.0
   name: "jupyterhub"
-  description: "JupyterHub"
+  description: "JupyterHub, snap install fails on debian 9, not debian 10"
   inputs: null
   base:
     - "debian"
