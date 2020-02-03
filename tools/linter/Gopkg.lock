@@ -3,35 +3,48 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:964d3bf91de45ac83ff136c6eb2429e6b30c5f1a90482e55c2f0e88f0c6c66de"
+  digest = "1:3354d40dd6fd31f645c508f8c1211524efc30441099c3c50b190677e4037170b"
   name = "github.com/osallou/goterra-community"
   packages = ["tools/model"]
   pruneopts = "UT"
-  revision = "4902ab1a7b101b38847d595ed124bb26ae3e53ac"
+  revision = "f335cbe6eba64069b3700d3019a4f04a81b28ff5"
 
 [[projects]]
   branch = "master"
-  digest = "1:1989b9e43d2fff2f9450e36b0776b35778f2230195bafbc9a3b9d03f3a1cf312"
+  digest = "1:c74b11b64c85f1313701dd4d17463a5dd21ebfbf517117bc108542ce17231664"
   name = "github.com/osallou/goterra-lib"
   packages = ["lib/model"]
   pruneopts = "UT"
-  revision = "a59a669f2ca8e804d32b8ffcf5d7223612d73f5d"
+  revision = "1cd0790fa90e1bf40a2b01a2cefdea3a4519a11c"
 
 [[projects]]
-  digest = "1:1cabe44fb226a08664539c7ff79f25940284d9e2116187a74c90472a51c257ca"
+  digest = "1:da2217f77d96b187c69f48d4401dc566e4346aff96e8f4e0f646537d6413a02b"
+  name = "github.com/rs/zerolog"
+  packages = [
+    ".",
+    "internal/cbor",
+    "internal/json",
+    "log",
+  ]
+  pruneopts = "UT"
+  revision = "f1dd50b8c64d79be1392edf1d8fda5cedea4916d"
+  version = "v1.17.2"
+
+[[projects]]
+  digest = "1:39d79b7ea83dea2996eb66dea4adba4eeee1d6a38f7d802937e9797ad31ddf02"
   name = "go.mongodb.org/mongo-driver"
   packages = ["bson/primitive"]
   pruneopts = "UT"
-  revision = "0d1270edf53072da4da781b76d2e1db58831152f"
-  version = "v1.0.4"
+  revision = "55b507b3e45a2ef5dc1d5a4cba3333c45dce443c"
+  version = "v1.2.1"
 
 [[projects]]
-  digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
+  digest = "1:55b110c99c5fdc4f14930747326acce56b52cfce60b24b1c03ef686ac0e46bb1"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
   pruneopts = "UT"
-  revision = "51d6538a90f86fe93ac480b35f37b2be17fef232"
-  version = "v2.2.2"
+  revision = "53403b58ad1b561927d19068c655246f2db79d48"
+  version = "v2.2.8"
 
 [solve-meta]
   analyzer-name = "dep"
