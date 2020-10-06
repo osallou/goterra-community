@@ -12,7 +12,7 @@ do
        nbvd=$((nbvd + 1))
        mkfs.ext4 -m 0 -F -E lazy_itable_init=0,lazy_journal_init=0,discard $vd
        mkdir -p /mnt/disks/data$nbvd
-       mount -o discard,defaults /dev/vdb /mnt/disks/data$nbvd       
+       mount -o discard,defaults $vd /mnt/disks/data$nbvd       
    fi
 done
 
